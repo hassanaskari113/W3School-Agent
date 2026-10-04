@@ -34,6 +34,11 @@ def is_correct(page):
     return page.get_by_text("Correct Answer!").count() > 0
 
 
+def go_to_next_question(page):
+    page.get_by_text("Next Question »").click()
+    page.wait_for_timeout(500)
+
+
 if __name__ == "__main__":
     url = "https://www.w3schools.com/html/exercise.asp?x=xrcise_attributes1"
 
@@ -51,6 +56,8 @@ if __name__ == "__main__":
 
     if is_correct(page):
         print("AI solved it correctly!")
+        go_to_next_question(page)
+        print("Moved to next question!")
     else:
         print("AI answer was wrong!")
 
