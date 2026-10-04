@@ -16,7 +16,7 @@ def open_exercise(url):
 
 
 def get_question_and_options(page):
-    question = page.locator("body").inner_text()
+    question = page.locator("h2").first.inner_text().strip()
 
     options = page.locator("input[type='radio']").evaluate_all("""
         elements => elements.map(e => e.parentElement.innerText.trim())
