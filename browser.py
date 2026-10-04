@@ -1,5 +1,7 @@
 from playwright.sync_api import sync_playwright
 
+from solver import solve_exercise
+
 
 def open_exercise(url):
     playwright = sync_playwright().start()
@@ -13,36 +15,19 @@ def open_exercise(url):
     return playwright, browser, page
 
 
-def get_exercise_text(page):
-    text = page.locator("body").inner_text()
-    return text
+def get_question_and_options(page):
+    question = page.locator("body").inner_text()
 
-
-def get_exercise_links(page):
-    links = page.locator("a").evaluate_all("""
-        elements => elements
-            .map(a => ({
-                text: a.innerText.trim(),
-                href: a.href
-            }))
-            .filter(x => x.text.includes("exercises"))
+    options = page.locator("input[type='radio']").evaluate_all("""
+        elements => elements.map(e => e.parentElement.innerText.trim())
     """)
 
-    return links
-
-
-def inspect_exercise(page):
-    print("\n--- EXERCISE PAGE ---")
-    print(page.locator("body").inner_text())
+    return question, options
 
 
 def submit_answer(page, answer_index):
     page.locator("input[type='radio']").nth(answer_index).check()
     page.get_by_text("Submit Answer »").click()
-    if is_correct(page):
-        print("Answer was correct!")
-    else:
-        print("Answer was wrong!")
 
 
 def is_correct(page):
@@ -54,11 +39,20 @@ if __name__ == "__main__":
 
     playwright, browser, page = open_exercise(url)
 
-    submit_answer(page, 0)
+    question, options = get_question_and_options(page)
+
+    answer = solve_exercise(question, options)
+
+    print("AI Answer:", answer)
+
+    submit_answer(page, int(answer))
 
     page.wait_for_timeout(1000)
 
-    print(page.locator("body").inner_text())
+    if is_correct(page):
+        print("AI solved it correctly!")
+    else:
+        print("AI answer was wrong!")
 
     input("\nPress Enter to close...")
 
