@@ -13,12 +13,22 @@ def open_exercise(url):
     return playwright, browser, page
 
 
+def get_exercise_text(page):
+    text = page.locator("body").inner_text()
+    return text
+
+
 if __name__ == "__main__":
     url = input("Enter exercise URL: ")
 
     playwright, browser, page = open_exercise(url)
 
-    input("Press Enter to close...")
+    exercise_text = get_exercise_text(page)
+
+    print("\n--- PAGE CONTENT ---\n")
+    print(exercise_text)
+
+    input("\nPress Enter to close...")
 
     browser.close()
     playwright.stop()
