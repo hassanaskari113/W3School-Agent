@@ -36,12 +36,21 @@ def inspect_exercise(page):
     print(page.locator("body").inner_text())
 
 
+def submit_answer(page, answer_index):
+    page.locator("input[type='radio']").nth(answer_index).check()
+    page.get_by_text("Submit Answer »").click()
+
+
 if __name__ == "__main__":
     url = "https://www.w3schools.com/html/exercise.asp?x=xrcise_attributes1"
 
     playwright, browser, page = open_exercise(url)
 
-    inspect_exercise(page)
+    submit_answer(page, 0)
+
+    page.wait_for_timeout(1000)
+
+    print(page.locator("body").inner_text())
 
     input("\nPress Enter to close...")
 
