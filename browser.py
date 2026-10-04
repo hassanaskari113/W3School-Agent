@@ -18,17 +18,30 @@ def get_exercise_text(page):
     return text
 
 
+def get_exercise_links(page):
+    links = page.locator("a").evaluate_all("""
+        elements => elements
+            .map(a => ({
+                text: a.innerText.trim(),
+                href: a.href
+            }))
+            .filter(x => x.text.includes("exercises"))
+    """)
+
+    return links
+
+
 if __name__ == "__main__":
-    url = input("Enter exercise URL: ")
+    url = "https://www.w3schools.com/html/html_exercises.asp"
 
     playwright, browser, page = open_exercise(url)
 
-    exercise_text = get_exercise_text(page)
+    links = get_exercise_links(page)
 
-    print("\n--- PAGE CONTENT ---\n")
-    print(exercise_text)
+    for link in links:
+        print(link)
 
-    input("\nPress Enter to close...")
+    input("Press Enter to close...")
 
     browser.close()
     playwright.stop()
