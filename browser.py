@@ -39,6 +39,14 @@ def inspect_exercise(page):
 def submit_answer(page, answer_index):
     page.locator("input[type='radio']").nth(answer_index).check()
     page.get_by_text("Submit Answer »").click()
+    if is_correct(page):
+        print("Answer was correct!")
+    else:
+        print("Answer was wrong!")
+
+
+def is_correct(page):
+    return page.get_by_text("Correct Answer!").count() > 0
 
 
 if __name__ == "__main__":
