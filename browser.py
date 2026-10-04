@@ -1,20 +1,22 @@
 from playwright.sync_api import sync_playwright
 
 
-def open_browser():
+def open_exercise(url):
     playwright = sync_playwright().start()
 
     browser = playwright.chromium.launch(headless=False)
 
     page = browser.new_page()
 
-    page.goto("https://www.w3schools.com/html/")
+    page.goto(url)
 
     return playwright, browser, page
 
 
 if __name__ == "__main__":
-    playwright, browser, page = open_browser()
+    url = input("Enter exercise URL: ")
+
+    playwright, browser, page = open_exercise(url)
 
     input("Press Enter to close...")
 
