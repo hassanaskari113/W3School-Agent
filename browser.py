@@ -8,7 +8,7 @@ def open_exercise(url):
 
     page = browser.new_page()
 
-    page.goto(url)
+    page.goto(url, wait_until="domcontentloaded", timeout=60000)
 
     return playwright, browser, page
 
@@ -31,17 +31,19 @@ def get_exercise_links(page):
     return links
 
 
+def inspect_exercise(page):
+    print("\n--- EXERCISE PAGE ---")
+    print(page.locator("body").inner_text())
+
+
 if __name__ == "__main__":
-    url = "https://www.w3schools.com/html/html_exercises.asp"
+    url = "https://www.w3schools.com/html/exercise.asp?x=xrcise_attributes1"
 
     playwright, browser, page = open_exercise(url)
 
-    links = get_exercise_links(page)
+    inspect_exercise(page)
 
-    for link in links:
-        print(link)
-
-    input("Press Enter to close...")
+    input("\nPress Enter to close...")
 
     browser.close()
     playwright.stop()
